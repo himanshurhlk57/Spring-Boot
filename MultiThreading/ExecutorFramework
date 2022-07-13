@@ -1,0 +1,82 @@
+Every java programs has at least one thread. The Main thread in Java is the one that begins executing when the program starts.
+
+2. Created Threads for Every Tasks
+
+i-> Thread objects use a significant amount of memory, and in a large-scale application, allocating and de-allocating many thread objects creates a significant memory management overhead.
+
+ii-> A system that creates a new thread for every request would spend more time and consume more system resources in creating and destroying threads than processing actual requests.
+
+3. Thread Pool
+This is collection of threads on which task can be scheduled. Instead of creating new threads for each task, select a thread from the thread pool and execute that task.
+
+i-> Thread pool is minimizing JVM overhead due to thread creation.
+ii-> Since active threads consume system resources, a JVM creating too many threads at the same time can cause the system to run out of memory.
+iii-> Executor framework in Java 1.5 uses a thread pool in this context.
+
+This works well for small applications, but in large-scale applications, it makes sense to separate thread management and creation from the rest of the application. Objects that encapsulate these functions are known as executors.
+
+There are four factory methods of Executor class.
+
+newFixedThreadPool
+newCachedThreadPool
+newSingleThreadedExecutor
+newScheduledThreadPool
+
+// newFixedThreadPool implementation
+
+ Executor framework consist of three main interfaces (and lots of child interfaces) i.e. Executor, ExecutorService and ThreadPoolExecutor.
+
+ 1.1. Benefits of Executor framework
+
+The framework mainly separates task creation and execution. Task creation is mainly boiler plate code and is easily replaceable.
+With an executor, we have to create tasks which implement either Runnable or Callable interface and send them to the executor.
+Executor internally maintain a (configurable) thread pool to improve application performance by avoiding the continuous spawning of threads.
+Executor is responsible for executing the tasks, running them with the necessary threads from the pool.
+
+
+1.2. Callable and Future
+
+Another important advantage of the Executor framework was the Callable interface. It’s similar to the Runnable interface with two benefits:
+
+It’s call() method returns a result after the thread execution is complete.
+When we send a Callable object to an executor, we get a Future object’s reference. We can use this object to query the status of thread and the result of the Callable object.
+
+
+Executors is a utility class that provides factory methods for creating the implementations of the interface.
+
+So the basic fundamental is the tasks submitted frequency may be out of sync with the task process rate, meaning if 100 tasks are submitted per second and only 10 tasks are able to process in 1 second, by all threads, then we still don't want to lose those 90 tasks.
+
+So there is a well-known Data structure to handle such cases: Queues.
+So if no Thread is free, we can push all tasks to the Queue, and tasks will eventually be read by the Threads for executions once they are freed from their current work.
+                                          
+                                        Thread Pool Executor
+
+                                   Queue                                                    Thread Pool
+                                                                                                      
+Client(Submit tasks) -> New task added Task3 Task2 Task1 <- Assign task to threads            Thread1      
+                                                                                              Thread2           
+
+
+
+ 6. ThreadFactory
+Since new Threads are created with new requests coming in, we need a Factory that can create a new Thread.
+By default, all the threads created are of the same Priority, of the same Thread-group, non-daemon status, etc.
+Of course, such things can be changed by providing your own ThreadFactory.
+
+
+1. Fixed thread pool executor — 
+Creates a thread pool that reuses a fixed number of threads to execute any number of tasks. If additional tasks are submitted when all threads are active, they will wait in the queue until a thread is available.
+
+ExecutorService es = Executors.newFixedThreadPool(10);
+ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+
+2. Cached thread pool executor —
+ Creates a thread pool that creates new threads as needed, and reuses previously constructed threads when they are available.
+ If you can think how is this working- it's simple, it has maximumPoolSize set to be Infinite.
+
+ 3. Scheduled thread pool executor — Creates a thread pool that can schedule commands to run after a given delay, or to execute periodically.
+ To do this, a special type of Queue(DelayedWorkQueue) is used where when the request to poll comes, it only returns the value after a certain delay.
+
+ 4. Single thread pool executor — Creates single thread to execute all tasks. Since all tasks will be executed by a single thread, all tasks execute sequentially. As you might have guessed, it has corePoolSize and maximumPoolSize = 1.
+
+

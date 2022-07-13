@@ -1,0 +1,72 @@
+Spring framework ->
+When we are using spring framework, instead of focusing on creating objects,
+wiring dependency, we can focus more on the business logic
+of our application, and you can leave it on the spring framework to manage 
+the lifecycle of the object.
+All we have to do is mark components using annotations @Component
+and dependency using @Autowired
+and allow spring framework to do its magic.
+
+Group is package name
+artificat/name -> project name / is like the package
+combine to make package name unique / class
+
+Get bean after annotating class with @Component annotation
+bean/plain old java objects
+
+ConfigurableApplicationContext context = SpringApplication.run(LearnSpringFrameworkApplication.class, args);
+
+Class itsObject = context.getBean(ClassName.class);
+
+use the objects(itsObject) to run business logic 
+
+@Component -> Class managed by Spring framework 
+
+@SpringBootApplication -> In this a Component scan is defined as a part of your spring boot application 
+
+As soon as we are launching a spring context here a Component scan is done
+By default a Component scan is done on the same package where you 
+have @SpringBootApplication annotation is present.
+
+@ComponentScan -> searches for the class which has @Component defined on
+Once spring is able to find @Component classes it would try and make instances for them
+and then identify the dependency that are present for each of these classes
+and create instances for these dependency and it would wire the dependency
+into the beans this entire process is what known as dependency injection
+
+Spring beans -> An object managed by Spring Framework 
+The creation of the object, the lifecycle and the destruction of 
+the object everything is done automatically by the spring framework and 
+thats why these are called spring beans 
+
+Dependency injection is a concept and the dependency injection
+feature in spring framework is provided by a ioc container 
+which is present in spring framework.
+
+The popular types of IOC container are 
+i -> ApplicationContext(complex - most frequently used)
+ii -> BeanFactory(simpler features - rarely used)
+
+
+This would create a application context for us, and from the application context we are picking up our beans.
+SpringApplication.run(LearnSpringFrameworkApplication.class, args);
+
+If you have multiple matching beans and you want spring framework to choose 
+one of them or want to give high priority to something
+you can do it by making use of @Primary annotation
+
+By default the component scan is done only on com.packageNameYouCreated
+and also this is the package where the @SpringBootApplication annotation is defined, others package are not component scan
+if you want to component scan other package as well we can define 
+@ComponentScan("defaultPackage", "newPackage")
+                "thisPackage"    "subPackages"
+
+Q -> How is Spring JAR downloaded?(Maven)  
+
+To run our application we would need spring jar that's an application dependency
+And to download spring jar we would need maven
+
+Inside the spring application context there might be beans 
+needing other beans thats the spring dependency
+
+@SpringBootApplication – to denote the main class of a Boot Application. This annotation combines @Configuration, @EnableAutoConfiguration and @ComponentScan annotations with their default attributes.

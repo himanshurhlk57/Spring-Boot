@@ -1,0 +1,31 @@
+Annotation
+
+@Component -> you need to start managing the instance of these class
+public class ComplexBusinessService{
+
+  @Autowired -> this sortAlgorithm is the dependency of ComplexBusinessService
+  SortAlgorithm sortAlgorithm;
+}
+
+@Component
+public class BubbleSortAlgorithm implements SortAlgorithm{
+
+}
+
+SpringBoot will interally do this 
+SortAlgorithm sortAlgorithm = new BubbleSortAlgorithm();
+ComplexBusinessService businessService = new ComplexBusinessService(sortAlgorithm)
+
+Terminology
+
+Beans => The instances of the class that spring manages are called beans 
+
+Autowiring => The process where spring indentify the dependency, identify the matches for the dependency and populates them the process is Autowiring
+
+Dependency Injection
+
+Inversion Of Control 
+
+IOC Container
+
+Appliction Context

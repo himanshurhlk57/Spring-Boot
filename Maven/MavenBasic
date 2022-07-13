@@ -1,0 +1,30 @@
+maven is a build tool
+so if you want to create a project you want a project structure, you want something that will compile your file, you want something that will test your application, and you want something that will give you all the required library
+
+
+
+project
+groupId - com.telusko
+artifactid - demo
+package - com.telusko.demo.web
+
+maven or gradle
+
+we want the project we created ourself to be unique 
+so we combine the groupId and artifactid
+
+groupId will define your package
+
+all the project i will create will be part of com.himanshu
+
+artifactid will represent your project name
+
+package mame - com.himanshu.demo.web
+
+the dependency add .jar file
+
+when you are using any dependency for the first time
+lets say spring dependency it will get downloaded from the remote repositry
+
+maven has remote repositry 
+it also has a local repositry now every time you ask for dependency now it will first search for local repositry if it is not there it will go to remote repositry

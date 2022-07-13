@@ -1,0 +1,59 @@
+// Controller file  
+  // get employee by id
+    @GetMapping("employees/{employeeId}")
+    public Employee getEmployeesById(@PathVariable("employeeId") Long employeeId) throws EmployeeNotFoundException {
+        return employeeService.getEmployeeById(employeeId);
+    }
+
+   // in the error package EmployeeNotFoundException class file
+
+
+    public class EmployeeNotFoundException extends Exception{
+      public EmployeeNotFoundException(String message) {
+          super(message);
+      }
+
+
+  // service file
+
+  public Employee getEmployeeById(Long id) throws EmployeeNotFoundException {
+    Optional<Employee> employee = employeeRepository.findById(id);
+    if(!employee.isPresent()){
+        throw new EmployeeNotFoundException("Employee with the given id is not present");
+    }
+    // if found the employee
+    return employee.get();
+}
+}
+
+// for meaningful response
+class that will be responsible for sending response back based on the exception that is thrown
+in the error package
+
+@ControllerAdvice
+@ResponseStatus
+public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(EmployeeNotFoundException.class)
+    public ResponseEntity<ErrorMessage> employeeNotFoundException(EmployeeNotFoundException exception, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND,
+                exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    }
+
+}
+
+// in the entity
+@Data
+public class ErrorMessage {
+
+  private HttpStatus status;
+  private String message;
+}
+
+// now on restclient (postman)
+
+{
+  status: "NOT_FOUND",
+  "message": "exception.message()"
+}

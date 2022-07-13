@@ -1,0 +1,74 @@
+One task lets say MsWord that is one process
+
+MsWord -> Main process
+Typing - Sub process
+Spelling check - Sub process
+
+These sub-process are called threads(Unit of a process)
+
+Octa core cpu -> means we have 8 cores
+
+when you create or run a java application you only 
+use one thread
+
+If you have added the logic of addition of two number
+you already have used one thread
+
+The exception we get is in exception in thread main 
+so main is a thread
+
+In every java application we have atleast one thread as main
+
+// MultiThreading(use)
+
+ 1 -> lets say we 4 core, in all 4 core there is 4 different thread running and the main thread is calling all the three different thread so the task we were able to do before in 5 sec now can be done in 2sec approx
+
+2 -> To do async task(Api call)
+the main thread will not make the api call the other thread will do this so that we can use our app in background instead of getting stuck
+One thread will interact with the user, the second thread will be gping for the server request
+
+3 -> web application
+when you send a request from client to server using servlet
+if there are 5 different user then there will be 5 different thread working with servlet to call server from client side
+
+Thread is a inbuilt class in java
+Thread t1 = new Thread();
+
+It doesnot know what to do 
+so you will create your own thread class 
+
+and every thread class should have method run
+
+run is responsible for the task you want to do
+
+class MyThread extends Thread{
+  int[] values = {6,5,1,7,8};
+  public void run(){
+    for(int i = 0; i<5; i++){
+       values[i] = values[i] * 2;
+    }
+ }
+}
+
+Thread t1 = new MyThread();
+t1.run();
+
+By default we have main thread here
+Parallely if you want to start a new thread
+if you call start method it will automatically call run method
+
+sleep is a static method which takes millisecond
+wait, notify
+
+In java we canot achieve multiple inheritance thats why we use a interface Runnable
+
+other way to create a thread
+
+class A{
+
+}
+
+class MyThread extends A implements Runnable{
+
+}
+

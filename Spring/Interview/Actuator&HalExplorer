@@ -1,0 +1,36 @@
+<!-- Actuator -->
+Whenever we put our application in production,
+monitoring the application become very very important, you would want to monitor the health of the application, that's what actuator provides you with.
+
+Go to application.propertiy and add a simple configuration
+
+management.endpoints.web.exposure.include=* -> enables most of the feature provided by the actuator
+
+localhost:8080/actuator
+
+Features :-
+-> all the spring beans that are created
+-> all the details around the environment, the port, system property, details about jvm
+-> statistic around server request
+-> all different mapping or the endpoint that are provided by your application
+
+
+<!-- HAL Explorer -->
+
+Hal explorer provides the visualization of acctuator, all the links in the visual format
+with response status and response header.
+
+When your application supports HAETOS and your application provides links in this kind of a way, you can use hal explorer to explore those apis
+
+
+
+
+
+
+
+
+
+
+
+
+

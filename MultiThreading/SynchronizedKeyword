@@ -1,0 +1,52 @@
+package MultiThreading;
+
+// every time you call this class method it will increment the counter
+
+class Counter {
+    int count;
+
+    // when you don't make your method synchronized your method or your Counter object is not thread safe your class is not thread safe
+//    public void increment() {
+//        count++;
+//    }
+
+    // if you make the method synchronized then only one thread can work with this method
+    public synchronized void increment() {
+        count++;
+    }
+}
+
+public class Synchronization {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+//        counter.increment();
+//        counter.increment();
+
+        // lets create a new thread and using that call in the increment method 1000 times.
+
+        Thread t1 = new Thread(() -> {
+            for (int i = 1; i <= 1000; i++) {
+                counter.increment();
+            }
+        });
+        Thread t2 = new Thread(() -> {
+            for (int i = 1; i <= 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        // when two thread are doing increment at the same time
+        // both the fetching the value as well as incrementing so in between values mismatches before assigning
+        // both the thread using the increment method at the same time
+        // what i want now is if t1 is incrementing the count t2 shouldn't increment it
+        // now we have made our method synchronized we will get the desire result i.e 2000
+        t1.start();
+        t2.start();
+
+        // asking our main thread to wait to let t1 get its job done then print the count so output 1000
+        t1.join();
+        t2.join();
+        System.out.println("Count is " + counter.count);
+    }
+}
+a

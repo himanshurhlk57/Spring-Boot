@@ -1,0 +1,14 @@
+@Modifying Annotation
+
+A method to modify the value in our database we need to use @Modifying annotation
+
+ @Transactional -> A transaction will be created, all the operation insert, delete, update. We can do all those things and at the end after the particular operation is performed, when that particular method is completed, that particular transaction will be commited to the database.
+ Ideally they are added in the service layer
+
+For being considered as a transaction, all processes inside should be executed successfully. If one process fails, all transactions is failed. This is the transactional principle.
+
+Using @Transactional 
+
+ In a transaction, if a single process fails then all transactions should fail. We can implement this behavior using @Transactional annotation.
+
+ @Transactional will make sure all our operations are successfully executed, if not, it will roll back all operations at the database as if nothing happened.

@@ -1,0 +1,33 @@
+CSRF -> cross site request forgery will prevent another website to submit data on your behalf
+CORS -> Allows application running on different domain without any issue. Browser will not allow cross origin resource by default we have to enable it in our server side application
+
+Spring boot security dependency
+When a restful client sends a request to our rest application
+the very first component in spring security intercteps the request is 
+**Authentication Filter** -> Is a servlet filter class that will se if the user has authenticated or not if not it will send that request to the **Authentication Manager** to check if the details sent by the user is correct or not
+Authentication Manager internally uses                          **Authentication Provider** -> This is where the login(Authentication) logic  is defined. It will not fetch the user detail from the database
+it will use User Details service for that purpose. It also uses a password encoder so that we dont end up storing the password in plain text.
+Once the Authentication Provider check the user name and password are correct then it will send the appropriate response back to the Authentication Manager and then it hands back to the Authentication Filter. If the Authentication succeded.
+The Authentication Filter will use a success handler and stores that
+authentication information the user entity itself in a **Security Context**. 
+If the authentication failed it will use a AuthenticationFailureHandler to send the appropriate response back to the client.
+
+**Application Filter** -> Class
+check if the user has already logged in. If he has already logged in
+from the security context it knows about it then it will not use all of the mechanism again. If on the request user is not already logged in then it will use all of the mechanism.
+
+Except for the filter everything here is interface
+
+For password implementation there are tons of implementation
+
+After adding spring starter security depedency without you writing any line of code the basic http authentication will be enabled for your application.
+If you want to customize this defaults you will create java based spring config mark with it Configuration annotation and it should extend websecurityconfigureradapter from spring and then you can override the default methods.
+
+Default user and password created
+default password is uuid universal unique identifier
+
+If you know hit any route from the browser they will send the cookie back to the client every time you send request.
+Because you received the json id the next time you send the request it will not ask for password and you will be authenticated.
+
+The very first time authentication is happend the jsession id is created and it will use that jsession id as a key.
+From the next time as client sends the jsession id the authentication filter uses the jsession id checks for already authenticated and it will not prompt for authentication as long as the cookie is available.

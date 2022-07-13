@@ -1,0 +1,16 @@
+Spring -> Spring is a Java based framework to built to create an
+enterprise ready application.
+When you create a java application there are lot 
+more things that you have to do, lots of configuration
+lots of property addition, lots of package and modules and jar 
+file that you need to add to create your application.
+
+Spring boot autoconfiguration ->
+configure dispatcher servlet, bean object to json and vice versa, error mapping configuration
+
+The request we get on the home page goes to the dispatcher servlet, it would be the one that will be handling the request first.
+Dispatcher servlet is the front controller for the spring mvc framework
+
+Knows all the mapping and the right controller to execute for which request
+
+It uses the jackson conversion

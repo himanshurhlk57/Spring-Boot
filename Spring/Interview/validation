@@ -1,0 +1,29 @@
+// entity
+
+// dependency -> spring-boot-starter-validation
+
+public class Employee {
+
+    private @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    // particular validation
+   @NotBlank(message = "Please Add Employee Name")
+    private String name;
+
+}
+
+   // controller
+    //POST
+    @PostMapping("/employees")
+    public Employee createEmployee(@Valid @RequestBody Employee employee) {
+        return employeeService.createEmployee(employee);
+    }
+
+    // repository
+    public Employee createEmployee(Employee employee) {
+      return employeeRepository.save(employee);
+  }
+
+  // different type of validation

@@ -1,0 +1,302 @@
+One object is dependent on some object and other on some other
+
+Loose coupling -> one object is not totally dependent on other object.
+
+Dependency injection container(Spring container) -> they are responsible for creating object for you and then they will be injecting dependency in your class
+
+Dependency injection pattern is a default way they go for creating different object in the application
+
+
+
+ * * * * Daily Code Buffer * * * * * 
+
+using new kyeboard we ourself is crating object for that class
+when there are lot of 100 and 1000 of classes are interalted to each other then that is not the good 
+approach to class object manually.
+
+So in this type of scenario Inversion of control comes into the picture
+Inversion of control is nothing but to give the control from yourself as a
+developer to the framework you are using, in this case we are giving 
+control to spring framework to create object for us.
+so to implement this thing dependency injection pattern it that we use 
+
+When the spring boot application start it have the factory that will create all the object or all the beans of your application
+so if you have 100 and 1000 of classes in your application all those particular classes object will be 
+created when that particular spring boot context is started and all those particular beans will be stored in one of these springs
+container and whenever you want that particular bean or particular object, i want those particular class or object spring will 
+give it to you.
+
+ex -> to make this particular class as a component of a spring so that whenever the application
+is started this particular class is added to the spring container to do that lets add @Component annotation 
+
+@Component // Beacuse its a resourse and return a resource @RestController
+public class HelloController{
+
+}
+
+@SpringBootApplication -> annotation
+Component Scan will scan the all the component available in your spring boot application
+and all those particular component will be added to the spring container when the application started
+By default whatever is the package there that is com.himanshu.rest.api so whatever the 
+classes or whatever the object available inside this particular package or the subpackages will be 
+added to the spring container.
+So if you are creating different package you have to add the component scan and you need to add the 
+package information so those particular package will come to spring radar and all those particular object will be
+added to the spring container when the application starts
+
+so when you run the application it will run on the embeded tomcat
+
+we have created all different class EmployeeService, EmployeeController and EmployeeRepository
+and for all these particular classes and interface we have added either @Repository @Service @RestController which are the 
+default annotation which is adding @Component annotation for all our classes.
+All the classes we already created are in the radar of spring.
+So whenever the spring application starts all these particular object will be created and will be added to your container.  
+
+api call receive in the controller -> then goes to service  -> then to Repository -> entity is like modal or schema for the database
+
+// get an employee based on particular id
+
+@GetMapping("/employee/{id}")
+// we have to get the id that we get here as a input parameter to our method as well
+// PathVariable now we need to map id we are getting to employeeId for that we can use PathVariable notation
+public Employee fetchEmployeeById(@PathVariable("id") Long employeeId){
+  
+}
+
+hibernate validation
+
+validation for all the api we have created
+suppose we have 2-3 fields coming as a input parameter for our api to save the data or update the data
+so we can add the validation that i want my employee name to be always available
+Without my employee name that particular json data or particular request body
+we are getting from the client that should be invalid or bad request
+All these particular validation we can add using hibernate validation
+
+@NotBlank(message)
+on entity name that we want to be validted 
+and @Valid inside the parameter in the controller function 
+
+@Length(max = 5, min = 1)
+@Size(max = 10, min = 0)
+@Email
+@Positive
+
+
+@Logger
+
+Lombok allows us to remove boilerplate code from our 
+java application using @Data annotation
+
+** Exception handling in spring boot **
+
+lets say i am getting an employee with an employee id 
+what if the id with i want to find the employee doesn't present 
+in the database
+
+whenever there is an exception occuring at the controller level we have to
+fetch or identify that this is the exception thown and whenever the particular exception is there
+what we have to send back to data as a response that we have to configure over here
+
+create a new class that will be responsible for sending all the response back based on the 
+exception that is thrown
+
+
+
+* * * * Daily Code Buffer * * * * * 
+
+
+
+
+* * * * Udemy Spring Course * * * * * 
+
+
+
+Two most important magic behind spring boot is 
+
+1 -> Spring boot starter project
+
+Define different dependencies that are needed to build 
+different kind of applications
+
+2 -> Spring Boot Auto Configuration
+
+Spring Boot Auto Configuration would look at those dependency
+and all the classes which are available and it would provide 
+autoconfiguration that is typically needed with that kind of application
+
+Spring Boot provides Auto Configuration
+Basic configuration to run your application
+using the frameworks defined in your maven dependencies
+
+If you use spring boot starter web, following are auto configured 
+i -> Dispatcher Servlet
+ii -> Embedded servlet container - Tomcat is the default 
+iii -> Default Error Pages 
+iv -> Bean  to/from JSON conversion
+
+
+@SpringBootApplication
+public class RestApIsApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(RestApIsApplication.class, args);
+	}
+
+}
+
+This is where spring context is being launched on using SpringApplication class
+
+In @SpringBootApplication -> their are three important annotation are present in 
+
+ @SpringBootConfiguration, @EnableAutoConfiguration,
+  @ComponentScan -> using this you can specify the packages where the spring framework
+can scan for different kinds of components.
+
+
+Our jar file contains the server inbuilt(Tomcat)
+
+
+SpringJdbc is more advantagious than jdbc -> in both of these you right you query first and map the values to it.
+writing this query not a simple task. Your query starts becoming complex  
+
+
+JPA(Java Persistence API) -> why don't you map object to the row
+what we do with JPA is we define @Entity and map it to a row in a table called employee
+  
+Class Employee{
+
+}
+
+This employee class maps to the table employee in database
+and its attribute to column in the employee table
+
+once you define the entity and the relationship the jpa implementation would
+take care of identifying the entities and creating the right quries 
+for you based on the operation you would want to perform.
+
+The job of writing the query shifts from you the developer 
+to framework which is called a jpa implementation
+
+JPA is an interface hibernate is the most popular implementation of JPA
+So you can create JPA as an interface and hibernate as a class.
+
+hibernate was the most popular orm framework in the last decade
+
+JPA is the standard of how we do ORM -> object relational mapping
+
+object is the instance of entity class and mapping of object to a relation(i.e a table)
+
+A primary key will uniquely identify each row in a table
+so if i say 901 there will be only one row in that table with 901
+
+Without the entity the course class is any other java beans
+
+An entity bean map to the row of the table
+
+*** Entity Manager ->
+Is an interface to something called as persistence context
+All the entities that are being saved through the entity manager are
+saved to persistence context. The persistance context keep track of
+all the different entities which are changed during the specific transaction
+and also it keeps track of all the changes needs to be stored back to the database.
+
+
+* * * * Udemy Spring Course * * * * * 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+we want loose coupling 
+you need to test your software as a whole, and also we should test our each unit
+
+Inversion of control -> To give the control to the framework itself
+ 
+ To do loose coupling spring comes into the picture
+
+ we can create different classes and tell the spring these are the classes i have
+ and spring will try to reference all the classes, now you dont have to create object using new kyeboard
+ using Annotation or xml configuration that this class might need this
+ 
+ giving control to the spring (Inversion of control) and dependency injection is the process
+ we are doing
+
+ xml based configuration, Annotation, java configuration
+
+
+
+
+
+// Next step tell the spring where to search for component
+
+// Lets say in the demo package we have all the component there
+
+// <context:component-scan base-package="demo"></context:component-scan>
+
+// code part
+
+interface Staff{
+  void assist();
+}
+
+@Component -> Spring Component -> whatever the class we have created is the component that you can use to create the beans out of it
+ class Doctor implements Staff{
+
+  public void assist(){
+    System.out.println("Doctor is assisting");
+  }
+
+}
+
+@Component
+class Nurse implements Staff{
+
+  public void assist(){
+    System.out.println("Nurse is assisting");
+  }
+
+}
+
+ public class Main{
+   public static void main(String[] args){
+    // old way
+    Doctor doctor = new Doctor();
+    doctor.assist();
+
+    // new way becuase we have used annotation
+    Staff staff = context.getBeans(Doctor.class)
+    Staff staff = context.getBeans(Nurse.class)
+
+
+   }
+ }
+
+ // Java Configuration
+
+ Create a configuration class
+
+ @Configuration
+ public class BeanConfig{
+  
+ }
+
+

@@ -1,0 +1,156 @@
+package JavaEightFeature;
+
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+class Employee {
+    private String firstName;
+    private String lastName;
+
+    public Employee(String firstName, String lastName, Double salary, List<String> projects) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.salary = salary;
+        this.projects = projects;
+    }
+
+    public Employee() {
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", salary=" + salary +
+                ", projects=" + projects +
+                '}';
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
+
+    public List<String> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<String> projects) {
+        this.projects = projects;
+    }
+
+    private Double salary;
+    private List<String> projects;
+}
+
+public class StreamApiOnObject {
+    static List<Employee> employees = new ArrayList<>();
+
+    static {
+        employees.add(new Employee("Himanshu", "Gupta", 39000.0, List.of("Project1", "Project2")));
+        employees.add(new Employee("Nikhil", "Kumar", 34000.0, List.of("Project3", "Project4")));
+        employees.add(new Employee("Shivam", "Singh", 31000.0, List.of("Project5", "Project6")));
+    }
+
+
+    public static void main(String[] args) {
+
+        // Any operation that return the stream itself is intermediate operation
+
+        // creating stream of object
+//        Stream.of(employees);
+
+        // Ideally we call stream on the collection itself, it's now a stream object
+//        1-> forEach() -> takes consumer
+        employees.stream().forEach(employee -> System.out.println(employee));
+
+//        employees.forEach(System.out::println);
+
+//        2 -> map() -> takes function it allows you to map a particular object to different type of object and it will return the stream at the end
+
+        // increment the salary by 10% of all the employee
+        List<Employee> updatedSalary = employees.stream().map(employee -> new Employee(
+                employee.getFirstName(),
+                employee.getFirstName(),
+                employee.getSalary() * 1.10,
+                employee.getProjects()
+        )).toList();
+        System.out.println(updatedSalary);
+
+//        3 -> filter() takes predicate
+
+
+//        increased the salary by 10% whose salary is greater than 32000
+        List<Employee> filteredEmployee = employees.stream().filter(employee -> employee.getSalary() > 32000).map(employee -> new Employee(
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getSalary() * 1.10,
+                employee.getProjects()
+        )).toList();
+        System.out.println(filteredEmployee);
+
+        // 4 -> findFirst -> get thew first element out of this return Optional means it might have the object, or it might not have the object
+        // find the firstEmployee whose salary i increased first
+        Employee firstEmployee = employees.stream().filter(employee -> employee.getSalary() > 32000).map(employee -> new Employee(
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getSalary() * 1.10,
+                employee.getProjects()
+        )).findFirst().orElse(null);
+        System.out.println(firstEmployee);
+
+        // 5-> flatMap -> flatten up the object you have, suppose if you have the list of String if you do flatMap you will get stream of String only
+
+        // all the employee have list of projects within that particular object
+        String projects = employees.stream().map(employee -> employee.getProjects()).flatMap(strings -> strings.stream()).collect(Collectors.joining(","));
+        System.out.println(projects);
+
+        // short circuit operation
+        // I don't want to do any operation on first element, skip one take 1 and then rest of the element are skip directly
+        System.out.println(employees.stream().skip(1)
+                .limit(1).collect(Collectors.toList()));
+
+        // finite data -> convert list of infinite data to finite data
+        Stream.generate(Math::random).limit(5).forEach(System.out::println);
+
+
+        // sorting -> sort based on the firstName itself
+
+        List<Employee> sortedBasedOnFirstName = employees.stream().sorted((o1, o2) -> o1.getFirstName().compareToIgnoreCase(o2.getFirstName())).toList();
+        System.out.println(sortedBasedOnFirstName);
+
+        // min or max
+//        who have the maxium/min salary
+
+        employees.stream().max(Comparator.comparing(Employee::getSalary)).orElseThrow(NoSuchElementException::new);
+
+        // reduce
+
+
+    }
+}

@@ -1,0 +1,99 @@
+
+Spring Boot Auto Configuration would look at those dependency
+and all the classes which are available and it would provide 
+autoconfiguration that is typically needed with that kind of application
+
+Spring Boot provides Auto Configuration
+Basic configuration to run your application
+using the frameworks defined in your maven dependencies
+
+If you use spring boot starter web, following are auto configured 
+i -> Dispatcher Servlet
+ii -> Embedded servlet container - Tomcat is the default 
+iii -> Default Error Pages 
+iv -> Bean  to/from JSON conversion
+
+
+
+
+// Getting beans using xml based
+
+xml file for this
+resources -> xml file 
+in the xml file we need to name the class for which we want bean 
+<bean id="doctor" Class="demo.Doctor"></bean>
+
+ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+
+we created the context from spring.xml 
+so whatever the beans that are defined in this file 
+we can get from the context
+
+Doctor doctor = context.getBean(Doctor.class);
+doctor.assist();
+
+// Instead of using xml we can create BeanConfig class
+
+BeanConfig -> class 
+This is the class that defines the Configuration for my annotations 
+
+This is the config class and we need to scan 
+demo as the base package and whatever the components are there 
+we need to load those components
+
+
+If we not define the ComponentScan then we can define our beans in BeanConfig class manually
+If you define the bean yourself then you can remove the @Component from the doctor class
+
+@Configuration
+public class BeanConfig{
+
+  @Bean
+  public Doctor doctor(){
+    return new Doctor();
+  }
+
+}
+
+@Configuration
+@ComponentScan(basePackage = "demo")
+public class BeanConfig{
+
+}
+
+ApplicationContext context = new AnnotationConfigApplicationContext(BeanConfig.class);
+
+ShoopincCart cart = context.getBean(ShoopincCart.class);
+cart.checkout();
+
+// Bean Scope
+Whenever the spring is creating different bean we 
+need to define how those particular beans we want 
+
+There are five different scope available in spring bean 
+
+// Singelton
+By default all the beans will be created using the singelton scope 
+so for each and every class there will be only one single object 
+available in the entire application. 
+But if we want we can ask for different type of 
+scope as well
+
+// Prototype
+You will get a different object everytime when you request the object from the container
+
+Scope -> Singelton, prototype, request, session, global session
+
+@Component
+@Scope(scopeName = "singelton") // default
+@Scope(scopeName = "prototype") // for every time i try to get object from the container will get a new object
+public class Doctor implements Staff{
+
+}
+
+// Lifecycle of bean and in the way we can modify the lifecycle of bean
+i -> these are the bean i want to create 
+ii -> after that spring will try to instanciate those beans
+iii -> now it will try to populate the property, whatever the scope or default value you provided
+...
+pre-destroy the bean, bean destroyed from the jvm itself

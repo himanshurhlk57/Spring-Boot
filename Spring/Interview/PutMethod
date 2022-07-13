@@ -1,0 +1,26 @@
+  // UPDATE
+  
+  @PutMapping("/employees/{employeeId}")
+  public Employee readEmployees(@PathVariable("employeeId") Long employeeId, @RequestBody Employee employeeDetail) {
+      return employeeService.updateEmployee(employeeId, employeeDetail);
+  }
+
+  
+  public Employee updateEmployee(Long employeeId, Employee employeeDetails) {
+        Optional<Employee> emp = employeeRepository.findById(employeeId);
+        if (emp.isPresent()) {
+            Employee emp1 = emp.get();
+            emp1.setName(employeeDetails.getName());
+            emp1.setAge(employeeDetails.getAge());
+            return employeeRepository.save(emp1);
+        }
+        return null;
+    }
+
+    // DELETE
+
+    @DeleteMapping("/employees/{employeeId}")
+    public ResponseEntity<String> deleteEmployees(@PathVariable("employeeId") Long employeeId) {
+        employeeService.deleteEmployee(employeeId);
+        return ResponseEntity.status(HttpStatus.OK).body("Employee deleted successfully!");
+    }

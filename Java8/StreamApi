@@ -1,0 +1,95 @@
+package JavaEightFeature;
+
+/*
+
+ Stream api notes
+ Stream is an interface in stream package
+
+A Stream is a sequence of objects that operates on a source data structure and produce pipelined data that can be used to perform various operations.
+
+        A Stream is functional in nature, which means that it does not modify its source when producing the result.
+        Many operations such as filter(), map() and sorted() can be implemented lazily allowing high performance.
+        Streams support sequential as well as parallel processing.
+
+Stream operations are classified into 2 types, Intermediate and Terminal Operations which are then combined to create a Stream pipeline.
+
+Streams have three types of operations: terminal, intermediate and short-circuit. Terminal methods will end the stream.
+Intermediate methods will produce another stream from an existing stream. Finally, short-circuit methods will cause the earlier intermediate methods to be processed only until the short-circuit method can be evaluated using lazy evaluation.
+
+forEach() -> terminal method 
+
+*/
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class StreamApi {
+    public static void main(String[] args) {
+
+        // filter even number from the list
+
+        List<Integer> lists = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
+
+//         1 - way
+        Stream<Integer> stream = lists.stream();
+        List<Integer> evenNumber = stream.filter(element -> element % 2 == 0).toList();
+        System.out.println(evenNumber);
+
+//        2 - way
+        System.out.println(lists.stream().filter(element -> element % 2 == 0).collect(Collectors.toList()));
+
+//        3 - way
+        System.out.println(Stream.of(1, 2, 3, 4, 5, 6, 7, 8).filter(element -> element % 2 == 0).collect(Collectors.toList()));
+
+        // create stream object
+        System.out.println(Stream.of(new String[]{"Himanshu", "Soumo", "Kanhaiya"}).filter(name -> name.startsWith("H")).collect(Collectors.toList()))
+        ;
+
+        // Stream on object/array
+        String names[] = {"Himani", "Supii", "Rohan"};
+        Stream.of(names).forEach(name -> {
+            System.out.println(name);
+        });
+
+//         different methods on stream
+//        filter(Predicate) -> predicate will return either true or false and based on that it will filter
+
+//        map(Function)
+
+        List<String> names1 = List.of("Aman", "Rohan", "Abhinav", "Durgesh");
+        List<String> newName = names1.stream().filter(name -> name.startsWith("A")).toList();
+        System.out.println(newName);
+
+        List<Integer> numbers = List.of(23, 4, 2, 5, 7, 4);
+        // modify the existing number and print it to the console using forEach
+        numbers.stream().map(num -> num * 2).forEach(num -> System.out.println(num));
+        numbers.stream().map(num -> num * 2).forEach(System.out::println);
+        // modify the existing element and collect it into the list
+        System.out.println(numbers.stream().map(num -> num * num).collect(Collectors.toList()));
+
+//        sorted() operation as the name suggests, can be used to sort a stream.
+        numbers.stream().sorted().forEach(System.out::println);
+
+        System.out.println("---------");
+
+
+        //       anyMatch()  If the predicate returns true for at least one element, then the anyMatch() operation will return true.
+        List<String> nameList = Arrays.asList("Bruce", "Wayne", "Ben", "Affleck");
+        Boolean isBenExist = nameList
+                .stream()
+                .anyMatch(name -> name.equals("Ben"));
+        System.out.println(isBenExist); // true
+
+        System.out.println(Stream.of(1, 2, 3, 4, 5).anyMatch(num -> num > 6)); // false
+
+        List<String> nameList1 = Arrays.asList("Ben", "Bob", "Cob");
+
+        Optional<String> firstElement = nameList1.stream().filter(name -> name.startsWith("B")).findFirst();
+        System.out.println(firstElement.isPresent() ? firstElement : "Not Found");
+
+    }
+
+}

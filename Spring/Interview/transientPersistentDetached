@@ -1,0 +1,59 @@
+Persistent Class -> 
+
+Java classes whose objects or instances will be stored in database tables are called persistent classes in Hibernate. Hibernate works best if these classes follow some simple rules, also known as the Plain Old Java Object (POJO) programming model.
+
+There are 3 Object states of hibernate (or) Object Scope of hibernate-
+
+1. Transient state
+2. Persistent state
+3. Detached state
+
+Every entity object are passed to three states of the object before saving and updating the row in the database table 
+
+Before Session       In Session           After session
+ Transient State ->  Persistent State -> Detaiched State
+
+
+i-> Transient state ->
+
+A New instance of a persistent class which is not associated with a Session, has no representation in the database and no identifier value is considered transient by Hibernate:
+
+Let us consider a POJO class as Student Object->
+
+has no representation in the database
+
+Student student = new Student(); 
+Now, this student object is at transient state.
+
+ii -> Persistent state
+
+A persistent instance has a representation in the database , an identifier value and is associated with a Session. You can make a transient instance persistent by associating it with a Session:
+
+When we attache this POJO object to hibernate session->
+
+session.save(student);
+Now this POJO object is at persistent state.
+
+(Garbage collector point of view - GC cannot wipe-out Any object which is in the persistent state.
+Soo we can say that persistent state is like temporary storage for POJO objects)
+
+iii -> Detached State
+
+Now, if we close the Hibernate Session, the persistent instance will become a detached instance: it isn’t attached to a Session anymore (but can still be modified and reattached to a new Session later though).
+
+If we perform->
+
+session.evict(student); 
+then POJO object is evicted or removed back from the persistent state to detached state.Soo this state of POJO object is detached state.
+
+(Garbage collector point of view- GC can easily wipe-out the detached state POJO object from JVM)
+
+**
+If we perform->
+
+session.beginTransaction.commit();
+then the POJO object is at Permanent or Database storage state
+
+(Garbage collector point of view- GC cannot wipe-out this object because this POJO object is now outside the scope of JVM and stored in the form table inside a database.Soo we can say that this Database storage state is like permanent storage for POJO objects)
+
+

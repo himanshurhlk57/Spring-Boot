@@ -1,0 +1,79 @@
+@PostMapping("/users")
+public ResponseEntity<Object> createUser(@RequestBody User user){
+  User savedUser = service.save(user);
+
+  URI location = ServletUriComponentsBuilder.fromCurrentRequest() // /users
+  .path("/{id}") 
+  .buildAndExpand(savedUser.getId()).toUri();
+
+  return ResponseEntity.created(location).build();
+ 
+  // now on making post request the response we will receive 
+  // is 201 i.e created a new resource 
+  // in the header of our response we got // http://localhost:8080/users/4 -> if the client they want to know where the resource was created here it is.
+}
+
+// Proper way of implementing getmapping 
+// getUser by id
+
+// Package Exception -> ExceptionResponse
+
+// whenever an exception happens we would want to return response back in this specific format
+// ResponseEntityExceptionHandler -> abstract class
+
+@Data, no and all args
+public class ExceptionResponse{
+  private Date timeStamp;
+  private String message;
+  private String details;
+}
+
+// apply to all controller
+@ControllerAdvice
+@RestController // returning response back in case of exception
+public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
+
+  // for all the request it will return internal server error if the request doesn't goes the expected way
+  @ExceptionHandler(Exception.class)
+  public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request){
+
+   ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+
+  return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  public final ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request){
+
+   ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+
+  return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+
+  }
+
+
+
+}
+
+@ResponseStatus(HttpStatus.Not_FOUND)
+public class UserNotFoundException extends RuntimeException{
+
+  public UserNotFoundException(String message){
+    super(message);
+  }
+
+}
+
+
+@GetMapping("/users/{id}")
+public User retrieveUser(@PathVariable int id){
+  User user = service.findOne(id);
+  if(user == null){
+    throw new UserNotFoundException("User with id " + id + " doesn't exist");
+  }
+  return user;
+}
+
+// now if try to retrieve a user with the id that doesn't exist
+// will get 404 Not Found instead of 500 internal server error

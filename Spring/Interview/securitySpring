@@ -1,0 +1,31 @@
+The first ever request from client goes to filter,
+and it will intercept the request before it reaches to
+server(resource), it will create an Authentication object 
+and deligate the request to Authentication Manager,
+AM will validate the Authentication object received by 
+filter, AM calls an authenticate function and pass auth to it
+It is an interface it doesn't have Authentication functionality
+Now am calls to Provider Manager, and from there provider manager 
+based on the type of authentication type it calls 
+one of the authentication provider based on who can do it.
+If any authentication provider return true on calling by provider manager
+Now authentication provider will make use of userDetailService this userDetailService fetches data from the database, and then ap will call the authenticate function and authentication will be done.
+And in that authenticate object it will set the property as true with validity
+Now the provider will send the valid authenticate object 
+to filter, and now filter will set that object in security context. In the security context object is set so authentication will be done.
+
+-> filter
+  (Authentication)
+
+  Override configure method httt one to authoraize and authenticate
+  and other configure one for username and password with its role
+
+  antMatchcer matches the url and provide the rights to it
+
+  .antMatchers("/home", "/login") ->
+  spring security will allow these url to be accesssible by anyone without authentication 
+
+  role normal -> has read authority
+  role admin -> has read and right authority
+
+  csrf.disable()

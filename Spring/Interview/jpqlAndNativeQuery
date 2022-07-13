@@ -1,0 +1,110 @@
+// JPQL
+
+i -> Get student by emailAddress using query(JPQL Query)
+
+JPQL Query
+
+JPQL query are defined based on the classes you defined,
+not based on the table or table attribute, table column name that you 
+This will be defined based on the class that you have 
+created and the attribute that you are using in your class
+
+1st query
+                      student is a class we have created(i.e entity)
+@Query("select s from Student where s.emailId = ?1")
+                                      attribute ?1 -> firstParameter
+                                      not the email_id defined in mysql table
+Student getStudentByEmailAddress(String emailId);
+
+
+2nd query
+
+@Query("select s.firstName from Student where s.emailId = ?1")
+String getStudentFirstNameByEmailAddress(String emailId);
+
+
+Native Queries
+
+Using native sql query
+
+1st query
+
+@Query(                  table name in db     column name in db
+  value = "select * from tbl_student s where s.email_id = ?1",
+  nativeQuery = true
+)
+Student getStudentByEmailAddressNative(String emailId);
+
+So whatever the query you will define, will be executed 
+you have defined in the @Query value
+
+
+Query named paramater, multiple parameter you are passing,
+using ?1 and ?2 is not always the better approach.
+
+// Native named param
+
+@Query(                                                  much more readable
+  value = "select * from tbl_student s where s.email_id = :emailId",
+  nativeQuery = true
+)
+Student getStudentByEmailAddressNativeNamedParam(@Param("emailId") String emailId);
+
+
+
+
+
+@Query("select id from Employee where salary < (select avg(salary) from Employee")
+List<Integer> IdOfExistingEmployeeWithSalaryLessThanAverageSalary();
+
+//    @Modifying
+@Query("UPDATE Employee set salary = :newSalary where id= forId")
+void updateEmployeeSalary(@Param("newSalary") Integer newSalary,@Param("forId") Integer id);
+
+
+  //    iii -> Delete all employees with minimum salary.
+  @Transactional
+  public void deleteEmployeeWithMinimumSalary(Integer minimumSalary) {
+      employeeRepository.deleteEmployeeOfMinSalary(minimumSalary);
+  }
+
+//    @Modifying
+@Query("DELETE from Employee where salary < :minimumSalary")
+void deleteEmployeeOfMinSalary(@Param("minimumSalary") Integer minimumSalary);
+
+
+// NATIVE QUERY
+
+  @Query(value = "select emp_id, emp_first_name, emp_age from employee_table where emp_last_name = 'Singh' ", nativeQuery = true)
+   getEmployeeBasedOnUsingNativeQuery();
+
+
+  @Query(value = "DELETE FROM employee_table where emp_age > :inputAge", nativeQuery = true)
+  void deleteEmployeeBasedOnAge(@Param("inputAge") Integer age);
+  }
+
+
+JPQL
+
+@Query("select s from Student where s.emailId = ?1")
+Student getStudentByEmailAddress(String emailId);
+
+
+@Query("select s.firstName from Student where s.emailId = ?1")
+String getStudentFirstNameByEmailAddress(String emailId);
+
+Native
+
+@Query(                 
+  value = "select * from tbl_student s where s.email_id = ?1",
+  nativeQuery = true
+)
+Student getStudentByEmailAddressNative(String emailId);
+
+// Native named param
+
+@Query(                                                  much more readable
+  value = "select * from tbl_student s where s.email_id = :emailId",
+  nativeQuery = true
+)
+Student getStudentByEmailAddressNativeNamedParam(@Param("emailId") String emailId);

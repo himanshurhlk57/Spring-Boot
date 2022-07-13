@@ -1,0 +1,98 @@
+package MultiThreading;
+
+// by default we just have main thread i.e main thread
+
+// the below task are making our thread block or wait till the Hi
+//show method is executed fully what we want parallely the other hello class void method run too
+//class Hi {
+//    public void show() {
+//        for (int i = 0; i <= 5; i++) {
+//            System.out.println("Hi");
+//            // wait our thread for sometime or suspend our thread
+//            try {
+//                Thread.sleep(1000);
+//            } catch (Exception e) {
+//
+//            }
+//        }
+//    }
+//}
+//
+//class Hello {
+//    public void show() {
+//        for (int i = 0; i <= 5; i++) {
+//            System.out.println("Hello");
+//            try {
+//                Thread.sleep(1000);
+//            } catch (Exception e) {
+//
+//            }
+//        }
+//    }
+//}
+
+// achieving multiThreading
+
+import javax.swing.border.Border;
+
+class Hi extends Thread {
+    public void run() {
+        for (int i = 0; i <= 5; i++) {
+            System.out.println("Hi");
+            // wait our thread for sometime or suspend our thread
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+
+            }
+        }
+    }
+}
+
+class Hello extends Thread {
+    public void run() {
+        for (int i = 0; i <= 5; i++) {
+            System.out.println("Hello");
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+
+            }
+        }
+    }
+}
+
+public class ThreadDemo {
+    public static void main(String[] args) {
+
+        // the main thread will go to void show and call the method
+        // it will execute the for loop five times same for hello class void method
+
+        // now hi is not normal class it is thread class
+        Hi hi = new Hi();
+        Hello he = new Hello();
+
+//        hi.show();
+//        he.show();
+
+        // created our thread lets start our thread
+        // start will always call run
+        // whatever the logic you are writing will be part of run method
+        // whenever you create a thread it's your responsibility to override the run method
+        // here below we are starting both the thread at the same time
+//        hi.start();
+//        he.start();
+
+        // at this point of time there is not thread priority so the skedulor will go
+//        for the random order it will choose any thread at random
+
+        hi.start();
+        try {
+            Thread.sleep(20);
+        }catch (Exception e){
+
+        }
+        he.start();
+
+    }
+}

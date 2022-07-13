@@ -1,0 +1,81 @@
+package MultiThreading;
+
+// achieving multithreading using interface why interface
+// lets say i have another class A and this Hii class wants to extend clas A
+
+// Runnable interface -> Its a functional interface and it has only method that is run
+
+// whenever you want to create a thread one by extending the thread class
+// or by implementing the runnable interface
+
+// when you use the interface you need to make sure that we also create object of thread
+// in which you pass object of runnable
+
+class Hii implements Runnable {
+    public void run() {
+        for (int i = 0; i <= 5; i++) {
+            System.out.println("Hi");
+            // wait our thread for sometime or suspend our thread
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+}
+
+class Helloo implements Runnable {
+    public void run() {
+        for (int i = 0; i <= 5; i++) {
+            System.out.println("Hello");
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+}
+
+public class ThreadUsingInterface {
+    public static void main(String[] args) {
+
+        // the main thread will go to void show and call the method
+        // it will execute the for loop five times same for hello class void method
+
+        // now hi is not normal class it is thread class
+        Runnable hi = new Hii();
+        Helloo he = new Helloo();
+
+        // ath this point of time there is not thread priority so the skedulor will go
+//        for the random order it will choose any thread at random
+
+        // we dont have start in our class as well as in Runnable interface
+        // hi and he are runnable object
+        // Asking for the object of Runnable
+        Thread t1 = new Thread(hi);
+        Thread t2 = new Thread(he);
+
+        t1.start();
+        try {
+            Thread.sleep(20);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        t2.start();
+
+        // after executing or printing everything i want to print by or exit
+        System.out.println("Exit");
+
+        // there are two thread t1 and t2 one is printing hi and other is hello
+        // whereas the main thread is doing nothing it doesn't have anything to do so it is printing exit
+        // main plz stop when t1 and t2 thread done doing it work then only start your work
+         // after t1 and t2 thread done its work then join with the main thread and start doing the work with main thread
+    }
+}
+
+
+
+
+

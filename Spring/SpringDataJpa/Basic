@@ -1,0 +1,228 @@
+when you are working with java based application
+and you have to connect with the database we use jdbc
+
+jdbc is an api provided by java so we can connect with
+the database.
+
+Now the problem here is java works on the concept of
+objects and classes and database works in the concept of
+tables that having rows and columns
+
+now how to match together
+in the traditional way if you are using jdbc what we will be doing is will be getting data from the database that 
+will be in the table, we are getting all the record and converting it in the objects or the classes that we have. 
+Thats the conversion we are doing ideally we shouldn't doing those conversion.
+
+There has to be a system where it defines that this particular class or objects represent this particular table in the database
+
+for this reasons there are different framework available that gives us the functionality that is called ORM (object relationship mapping)
+
+ORM defines whatever the objects and classes is defined in your java application that will represent the table in your database.
+
+Framework like hibernate provides this type of functionality
+
+hibernate has his own implementation of orm how the different funcitonality, session, different object how it is behaving and interacting with the datbase is different compared to ibatics.
+
+so java people thought of lets create the standard specification. 
+Those standard specification will be used by the all the third party api provider or orm provider
+ and whenever we have to switch between provider it will be easy for the application developer.
+
+Java provides is just specification you have to go ahead with the implementation providers.
+
+If you are going with jpa you must be using hibernate or ibatics the orm provider.
+Because jpa is just the specification and you are using that specification via any of the framework provider.
+
+---
+
+---
+
+JPA one to one relationship
+
+There's two class One Course and Other CourseMaterial
+
+There's one to one relationship between these two classes
+
+for one course there will be one course material
+and for courseMaterial it will available for particular course only
+
+and for these particular thing how will table be created is like
+
+for a course it contains courseId, courseTitle
+and for courseMaterial it has courseMaterial and url to it
+
+so what will happen is either of the table will contain a foreign key of the other particular table we have
+
+so a courseId is a primary key for the course table so that particular courseId will be behaving as a foreign key for courseMaterial table
+
+we need to define the mapping between the two class
+Between course and course material the mapping we can define is the course material will consist of a course, course material cannot exist itself it has to have a course so that we can add the course
+material to it
+
+for that in CourseMaterial we will define
+
+@OneToOne
+private Course course;
+
+// This particular courseMaterial table will have one extra column that will be course_id, so it will refer for which particular course it belongs to
+// two table course and courseMaterial has been created in the course_material table there is course_id column too
+// in this way have added primary and foreign key relationship between two tables
+
+for every course there will be one course material
+that's a one to one relationship
+
+Cascading -> to pass the permission to your child element from parent to child
+
+currently we are trying to save the course material and want to persist it and we have course
+that is not persisted.
+So we will cascadde the information
+
+we have differnet cascadding type
+this particular course object is not available no problem try to persist that as well
+
+---
+
+Fetch type
+if you define the type as eager it will bring the course data as well when you try to bring the course material
+
+when you define the fetch type as lazy and you need course material data it will not bring course data until and unless you specifically ask to bring the course data
+
+in the courseMaterial entity file
+@ToString(exclude = "course")
+
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+
+we defined the findAll method for the courseMaterial
+
+Now again go to courseRepository and get the courses available here
+
+One to one bi directional
+
+    // ideally when you are getting courses you want course material as well
+    // there's no point in getting the details separately
+    // when you are working with course material you are getting courses as well
+    // but when you are working with course you are not getting course material because you have defined
+
+// unidirectional one to one mapping over here
+// in the course material entity you have reference for course
+// but if you go to course entity you have no reference for course material because of uni directional one to one mapping
+
+---
+
+JPA one to many relationship
+
+Entity 1 -> Course
+Entity 2 -> CourseMaterial
+Entity 3 -> Teacher
+
+course is having one to many relationship
+One teacher can teach multiple courses over here
+i.e a one to many relationship
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+
+// this particular teacher and course have one to many relationship
+// one teacher can have a list of courses inside a particular class
+
+public class Teacher {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long teacherId;
+    private String firstName;
+    private String lastName;
+
+    // uni directional one to many mapping over here
+
+    @OneToMany(
+            cascade = CascadeType.ALL
+    )
+    @JoinColumn(
+            name = "teacher_id",
+            referencedColumnName = "teacherId"
+    )
+
+
+    // there will be two table one will be teacher and one will be course
+    // the teacher which particular course is teaching that particular relationship will be having
+    // the course table will be having a extra key foreign key i.e teacher id that extra column will
+
+// define this particular column will define this course is taught by which particular teacher
+private List<Course> courses;
+
+}
+
+
+******
+JPA Many to One relationship
+
+There are many course available and those particulare courses are taught by any one of a teacher
+
+Rather than defining this particular teacher have list of course we can define a particular teacher 
+who is teaching a particular course that we define.
+
+More readable and understandable and thats the guidance provided by a specification of a jpa
+that we should always go for many to one relationship whenever possible 
+
+
+***** 
+Paging and sorting
+
+for every repository we have implemented the jpaRepository and these jparepository again extend the pagingandsortingrepository
+in the paging and sorting repository either you can implement the findall method based on the sorting or based on the pagination
+
+Page<T> findAll(Pageable pageable)
+
+pageable as a input parameter where you will define the different page number and how many records for that particular page
+
+and for the sorting as well you can define what kind of sorting you need to implement for fetching the data
+
+Pageable firstPageWithThreeRecords = PageRequest.of(0, 3);
+Pageable secondPageWithTwoRecords = PageRequest.of(1, 2);
+
+
+List<Course> courses = courseRepository.findAll(firstPageWithThreeRecords).getContent();
+
+System.out.println(courses)
+
+if in the database i have 5 row or 5 entity
+
+Long totalElements = courseRepository.findAll(firstPageWithThreeRecords).getTotalElements(); // this will print 5
+
+Long totalPages = courseRepository.findAll(firstPageWithThreeRecords).getTotalPages(); // this will print 2 there are 5 recors and in one page there are 3 record so in next page there will be two record hence 2 pages
+
+// there is title column in one of the table 
+and i want to sort based on the title
+
+public void findAllSorting(){
+
+   Pageable sortByTitle = PageRequest.of(
+    0,
+    2,
+    Sort.by("title"))
+
+  Pageable sortByCreditDecending = PageRequest.of(
+    0,
+    2,
+    Sort.by("credit").descending()
+    );
+
+List<Course> courses = courseRepository.findAll(sortByTitle).getContent();
+
+
+}
+
+
+
+******
+Many to Many reltionship 
+
+
+
+
+ 

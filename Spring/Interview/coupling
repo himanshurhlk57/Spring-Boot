@@ -1,0 +1,28 @@
+// Tight coupling
+
+public class Journey{
+  Car car = new Car();
+  public void startJourney(){
+    car.travel();
+  }
+}
+
+public class Car{
+  public void travel(){
+    System.out.println("Travelling by car");
+  }
+}
+
+// Loose coupling
+
+public interface Vehicle{
+  void start();
+}
+
+public class Car implements Vehicle{
+
+  @Override
+  public void start(){
+    sout("Travel by car")
+  }
+}

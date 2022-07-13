@@ -1,0 +1,30 @@
+
+Integertion Testing known as doing unit test for the 
+entier application
+
+currently we have service layer, repository, controller layer 
+you can test all those three layer differently as well 
+or you can test all the three layer at the same time using Integertion testing
+
+JUnit and mockito are added to our application by defult in 
+our spring application as a spring boot starter test dependency
+
+will use JUnit5 and mockito to test all of our component
+we have created
+
+Testing is typically done to make sure that the
+functionality of the application is as expected.
+
+Unit testing is testing a specific method or a class
+
+class Class1{
+  method1
+  method2
+  method3
+}
+
+Unit testing is writing individual test for each of these
+class method, or for a group of methods, or for a specific class
+
+JUnit is a framework which will help you to call these 
+specific method and check whether the output is as expected 

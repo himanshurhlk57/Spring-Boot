@@ -1,0 +1,69 @@
+<!-- 1 -> OneToOne Mapping -->
+
+One question can have only one answer
+One student can have only one laptop
+
+In the question entity class we have answer entity reference
+
+so when we try to save question answer will automatically will be save, saving answer object too while save question in the database
+
+Every question has its answer(uni-directional)
+
+Now i want the answer is of which question so will apply(bi-directional)
+
+now while creating object we neeed to pass question object to and save that in answer
+
+choose either one and do your work
+
+now we want only by ans_id in the question table 
+not in the both table so we can use mapped by
+
+Now in the answer table foreign key will not made
+and the foreign key matter will be handled by Answer answer in Question Entity
+
+
+<!-- 2 -> OneToMany or ManyToOne-->
+ One question having many answer or multiple answer
+ and many answer can belong to one question
+
+ Now one question will have multiple answer 
+ so will store list of answer in question  
+ and map it by OneToMany
+
+ Because you have store list of answer in question
+ a new table of named question_answer will be created
+ with two column question_id and answer_id
+
+ we dont want seperate table so in question entity we will do @OneToMany(mappedBy = "question")
+
+ Now in one of the table lets say in answer table
+ there will be question_id having same id with different answer so that one question can pick multiple answer
+
+ <!-- 3-> ManyToMany -->
+
+ One employee has been assigned with multiple projects
+ And on one project multiple employee can work
+
+ Employee table having
+ eId     eName
+         Himanshu
+
+I want to assign himanshu on three different project
+
+ Project table having
+ pId    projectName
+         tata-play
+
+And on tata-play project i want to assign three different employee
+
+For many to many relationship will create a new table
+
+Third Table(Employee_Project)
+eId      pId
+12        2
+13        2
+13        3
+
+Project with id 2 has been assigned to two different employee
+
+And employee with id 13 has been assigned two different project

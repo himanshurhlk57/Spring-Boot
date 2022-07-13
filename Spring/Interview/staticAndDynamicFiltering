@@ -1,0 +1,86 @@
+// Lets say on calling Get -> /users
+
+I get the details of user with id, name, password 
+Let's say i don't want password to comeback in my response
+You only want to send certain things to end consumer
+
+// Static filtering -> On the beans you are defining what you want to ignore 
+
+
+// Entity
+
+@Entity
+// ii -> Second Approach
+@JsonIgnoreProperties(value = {"password"})
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+   @ApiModelProperty(notes = "Name should be least of 5 characters and first letter as capital")
+    private String name;
+    private String age;
+
+   //  i-> Approach -> Makes more sense than second one
+    @JsonIgnore // now this field will not be send in the response, this field will be ignore for every request
+    private String password;
+}
+
+// Filtering controller
+"/filtering"
+return UserService.allUsers();
+
+// Response Back
+
+{
+  id: 1,
+  name: "Himanshu Kumar",
+  age: 20,
+  password: "him85him86"
+}
+
+
+// Dynamic filtering
+
+For some request i would like to send name and age 
+and for sometime i would want to send age and password 
+based on my requirements.
+
+With dynamic filtering we can't configure filtering 
+directly on the bean, we need to start configuring the
+filtering where we are retrieving the value.
+
+// only want to send name and age not password
+
+// GetMapping("/filtering")
+
+
+@Entity
+@JsonFilter("SomeBeanFilter") // important
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+   @ApiModelProperty(notes = "Name should be least of 5 characters and first letter as capital")
+    private String name;
+    private String age;
+
+    private String password;
+}
+
+// in service file
+public MappingJacksonValue getUser() {
+
+  List<User> users = userRepository.findAll();
+
+  SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("name", "age");
+  FilterProvider filters = new SimpleFilterProvider().addFilter("SomeBeanFilter", filter);
+  MappingJacksonValue mapping = new MappingJacksonValue(users);
+  mapping.setFilters(filters);
+  return mapping;
+
+}
+
+
+

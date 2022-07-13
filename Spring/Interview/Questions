@@ -1,0 +1,43 @@
+i->
+
+The DispatcherServlet is the front controller in Spring web applications. 
+It's used to create web applications and REST services in Spring MVC. 
+In a traditional Spring web application, this servlet is defined in the web.xml file.
+
+DispatcherServlet receives all of the HTTP requests and delegates them to controller classes.
+
+The Spring Boot autoconfiguration registers and configures the DispatcherServlet automatically.
+By default, the spring-boot-starter-web starter configures DispatcherServlet to the URL pattern “/”.
+
+ii -> @Scope
+
+We use @Scope to define the scope of a @Component class or a @Bean definition. It can be either singleton, prototype, request, session, globalSession or some custom scope. 
+
+// Bean Scope
+Whenever the spring is creating different bean we 
+need to define how those particular beans we want 
+
+There are five different scope available in spring bean 
+
+// Singelton
+By default all the beans will be created using the singelton scope 
+so for each and every class there will be only one single object 
+available in the entire application. 
+But if we want we can ask for different type of 
+scope as well
+
+// Prototype
+You will get a different object everytime when you request the object from the container
+
+Scope -> Singelton, prototype, request, session, global session
+
+@Component
+@Scope(scopeName = "singelton") // default
+@Scope(scopeName = "prototype") // for every time i try to get object from the container will get a new object
+public class Doctor implements Staff{
+
+}
+
+When a spring bean is scoped as a prototype, the Spring IoC container creates new bean instance every time when a request is made for that bean.
+
+iii -> Caching and its type

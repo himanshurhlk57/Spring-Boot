@@ -1,0 +1,91 @@
+
+// why default method in interface
+
+you wrote an open source library, which contains an Interface. 
+Say, your clients, i.e. practically all developers around the world, are using it heavily and are happy.
+ Now you have had to upgrade the library by adding a new method definition to the Interface to support a new feature. 
+ But that would break all builds since all Classes implementing that Interface have to change now. What a catastrophe!
+
+Thankfully, Java 8 now provides us default methods for Interfaces.
+ A default method can contain its own implementation directly within the Interface!
+ So, if a Class does not implement a default method, the compiler will take the implementation mentioned within the Interface.
+Nice, isn’t it? So in your library, you may add any number of default methods in interfaces without the fear of breaking anything!
+
+public interface Foo {
+    //Default method declaration
+    default int sumDefault(int a, int b) {
+        return a + b; //simply adds a + b
+    }
+
+    //Static method declaration
+    static int sumStatic(int a, int b) {
+        return a + b; //simply adds a + b
+    }
+}
+
+public class Bar implements Foo{
+
+}
+
+// there will be no problem if the class implementing these interface does not 
+// implements these method or override it as they have implemention already
+
+Invoking default and static method of interface
+
+// invoking default method
+int i = new Bar().sumDefault(2,2);
+
+// invoking static method
+
+int i = Foo.sumStatic(2,2);
+
+
+// overriding default and static interface methods
+
+public class Bar implements Foo{
+
+  // default method
+  public int sumDefault(int a, int b){
+    return a + b - 1;
+  }
+
+  // static method
+  // @Override <- Error
+  public int sumStatic(int a, int b) {
+      return a + b - 1; // adds a + b then subtracts 1
+  }
+
+  // overriding the default method will work without a hitch. 
+  // We unfortunately cannot override static methods, as Java prevents overriding any method with the keyword static
+
+}
+
+but what if the two interface have same default method signature
+so in that case the class implementing both the interface have to 
+provide the default implementatio or a way using super to call 
+which implementation you like.
+
+public interface Radio {
+
+  default public void next() {
+      System.out.println("Next from Radio");
+  }
+}
+
+public interface MusicPlayer {
+
+  default public void next() {
+      System.out.println("Next from MusicPlayer");
+  }
+}
+
+public class Smartphone implements Radio, MusicPlayer {
+  public void next() {
+      // Suppose you want to call MusicPlayer next
+      MusicPlayer.super.next();
+  }
+}
+
+
+Smartphone motoG = new Smartphone();
+motoG.next(); // Next from MusicPlayer

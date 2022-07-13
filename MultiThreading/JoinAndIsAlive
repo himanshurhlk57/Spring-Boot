@@ -1,0 +1,62 @@
+package MultiThreading;
+
+public class JoinIsSleepUsingLambda {
+
+
+    public static void main(String[] args) throws Exception {
+
+
+        Thread threadOne = new Thread(() -> {
+            for (int i = 0; i <= 5; i++) {
+                System.out.println("Hello World");
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+        Thread threadTwo = new Thread(() -> {
+            for (int i = 0; i <= 5; i++) {
+                System.out.println("Hello World Again");
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+        threadOne.start();
+        try {
+            Thread.sleep(200);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        threadTwo.start();
+
+
+        // after executing or printing everything i want to print by or exit
+//        System.out.println("Exit");
+
+        // there are two thread t1 and t2 one is printing hi and other is hello
+        // whereas the main thread is doing nothing it doesn't have anything to do so it is printing exit
+        // main plz stop when t1 and t2 thread done doing it work then only start your work
+        // after t1 and t2 thread done its work then join with the main thread and start doing the work with main thread
+        // so join will wait for that particular amount of time it may throw exception so will also handle the exception
+
+        // in between i want to check if the threadOne or threadTwo is alive or not we can check
+
+//        System.out.println(threadOne.isAlive()); // true
+//        System.out.println(threadTwo.isAlive()); // true
+
+        // join will wait for treadOne and threadTwo to join here
+        threadOne.join();
+        threadTwo.join();
+
+        // if you check the isAlive after the threadOne or threadTwo joined with main will get false or to detect our thread is in running state or not
+        System.out.println(threadOne.isAlive()); // false
+
+        System.out.println("Exit");
+    }
+}
+

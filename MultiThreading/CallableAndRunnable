@@ -1,0 +1,17 @@
+
+1 - Runnable
+
+Runnable interface is a functional interface, which implements the run method. run() method is a void method. 
+execute() method of the Executor Thread-pool took Runnable interface as parameter.
+
+2 - Callable
+
+Callable is also a functional interface as similar as the Runnable interface. which implements call() method. it has a return type.
+ it is not an void method. submit() method of the ExecutorThread-pool took Callable interface as parameter. it will give results as Future
+
+ Callable is similar to Runnable and can return any type of object when we want to get a result or status from the task.
+
+ The callable class has just one method “call ()” that holds all the code needed to execute asynchronously.
+
+ In a runnable interface environment, there was no possibility to return the result of the computation or throw checked exception. 
+ Whereas with Callable returning a value and throwing a checked exception is available.
