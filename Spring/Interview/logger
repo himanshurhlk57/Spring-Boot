@@ -1,0 +1,19 @@
+The basic way to add logging is to use class LoggerFactory using getLogger static method.
+
+public class HomeController{
+
+  // in application i.e property
+  By default -> logging.level.root=INFO
+  logging.level.io.javabrains=TRACE -> only the java brain package will have trace level logging 
+
+  // standard way for you to log in java
+  private final Logger logger = LoggerFactory.getLogger(HomeController.class);
+
+  @GetMapping("/")
+  public String home(){
+    logger.error("Error happend"); 
+    logger.trace("Home method accessed") 
+    return "Hello from Spring Boot";
+  }
+
+}

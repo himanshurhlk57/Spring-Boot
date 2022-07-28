@@ -35,8 +35,7 @@ return UserService.allUsers();
 {
   id: 1,
   name: "Himanshu Kumar",
-  age: 20,
-  password: "him85him86"
+  age: 20
 }
 
 

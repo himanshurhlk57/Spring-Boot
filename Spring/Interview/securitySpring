@@ -1,31 +1,313 @@
 The first ever request from client goes to filter,
 and it will intercept the request before it reaches to
-server(resource), it will create an Authentication object 
+server(resource), it will create an Authentication object
 and deligate the request to Authentication Manager,
-AM will validate the Authentication object received by 
+AM will validate the Authentication object received by
 filter, AM calls an authenticate function and pass auth to it
 It is an interface it doesn't have Authentication functionality
-Now am calls to Provider Manager, and from there provider manager 
-based on the type of authentication type it calls 
+Now am calls to Provider Manager, and from there provider manager
+based on the type of authentication type it calls
 one of the authentication provider based on who can do it.
 If any authentication provider return true on calling by provider manager
 Now authentication provider will make use of userDetailService this userDetailService fetches data from the database, and then ap will call the authenticate function and authentication will be done.
 And in that authenticate object it will set the property as true with validity
-Now the provider will send the valid authenticate object 
+Now the provider will send the valid authenticate object
 to filter, and now filter will set that object in security context. In the security context object is set so authentication will be done.
 
 -> filter
-  (Authentication)
+(Authentication)
 
-  Override configure method httt one to authoraize and authenticate
-  and other configure one for username and password with its role
+Override configure method httt one to authoraize and authenticate
+and other configure one for username and password with its role
 
-  antMatchcer matches the url and provide the rights to it
+antMatchcer matches the url and provide the rights to it
 
-  .antMatchers("/home", "/login") ->
-  spring security will allow these url to be accesssible by anyone without authentication 
+.antMatchers("/home", "/login") ->
+spring security will allow these url to be accesssible by anyone without authentication
 
-  role normal -> has read authority
-  role admin -> has read and right authority
+role normal -> has read authority
+role admin -> has read and right authority
 
-  csrf.disable()
+csrf.disable()
+
+
+
+**** JAVA Brains security ****
+
+Spring security is an application security framework 
+
+i -> Login and logout functionality
+ii -> Allow/block access to URLs to logged in users.
+iii -> Allow/block access to URLs to logged in users AND with certain roles.
+
+What Spring security can do
+
+i -> User name/password authentication
+ii -> SSO/Okta/LDAP
+iii -> App level Authorization
+iv -> Intra App Authorization like OAuth
+v -> Microservice security (using tokens, JWT)
+vi -> Method level security
+
+5 Core Concepts in Spring Security
+i -> Authentication
+ii -> Authorization
+iii -> Principal
+iv -> Granted Authority
+v -> Roles
+
+i -> Authentication  (Who is this user) Knowledge based or Position based
+ Who are you, ofcourse with proof that you are actually that you say who you are.
+
+ii -> Authorization (Are they allowed to do this)
+Can this user do what they are trying to do
+This allow yes or no decision depending on who the user is and what they trying to do
+is called authorization.
+You need authentication first.
+You need to know who the user first before being able to make decision on whether or not that particular user can do something or not.
+
+iii -> Principal (Currently logged in user)
+Principal is the person you have identified through the process of authentication.
+Once you authenticate with any application say by giving username and password, the application stablishes the principal and it remembers it. This is the reason you authenticate with the application only once.
+
+Q -> How does authorization happen?
+How does the application decide whether or not to allow a particular access.
+
+
+iv -> Granted Authority
+
+Bunch of permissions that allowed for a given user.
+In spring security this concept of permission is called granted authority.
+You can configure the authority in spring security for users and spring security takes care of the rest.
+Any operation that hasn't been specified explicitiily as permitted for a given user.
+That user can't do that operation.
+
+
+v -> Roles (Grouping of permission are role)
+
+Group of authorities usually assigned together
+There are different kinds of authorities and group of authorities are assigned to a single role like admin, or normal user and then the role is assigned to different based.
+This way it makes more sense.
+
+Just after adding spring security dependency how can spring security intercepts, or kind of take over the whole application.
+
+Filters -> 
+
+In web app we have bunch of servlets.
+When a user makes request to the url and then there is a particular servlet that does the functionality and provides the response for that particular request.
+Depending on the url the right servlet is picked.
+
+Filters kind of stand right in the middle and they intercepts every request, and this gives us an opportunity to do with every request.
+
+Servlets are mapped to urls, filter can be applied to all urls.
+
+Spring security puts filter in the front to examine all requests to allow or deny as per
+what shoud i be doing.
+
+*** Spring security default behavoir ***
+
+i -> Adds mandatory authentication for URLs.
+ii -> Adds login form
+iii -> Handles login error
+iv -> Creates a user and sets a default password
+
+app.property -;
+spring.security.user.name=foo
+
+Authentication Manager
+Manages the authentication in spring security
+
+Authentication manager sitting in the spring security app and doing the authentication.
+It actually has a method called authenticate() and that return either a sucessfull authentication or throws an exception when it can't authenticate
+
+Step 1: Get hold of Authentication ManagerBuilder
+Step 2: Set the configuration on it
+
+AM will ask what type of authentication you want and based on the type it perform its specific operation
+
+Extend the class Auth Manager Builder and provide the configuration you want.
+If you don't extend the class and doesn't override the method(configure) the default configuration happens.
+
+
+CODE 
+
+In config file
+
+// overriding the authentication in spring security
+
+@EnableWebSecurity
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+@Override
+protected void configure (AuthenticationManagerBuilder auth) throws Exception {
+
+auth.inMemoryAuthentication()
+.withUser("blah")
+.password("blah")
+.roles ("USER");
+.and()
+.withUser("himanshu")
+.password("him")
+.roles("admin")
+
+@Bean
+public Password Encoder get PasswordEncoder() {
+return NoOpPasswordEncoder.getInstance();
+}
+
+**** 
+Configure authorization in spring security
+
+What we want
+Different APIs having different access requirements
+
+API                Roles allows to access it
+/                  All(unauthenticated)
+/user              USER and ADMIN roles + authenticated
+/admin             ADMIN role + authenticated
+
+HttpSecurity lets you configure what are the paths and what are the access restrictions for those paths.
+
+.antMatchers() method let me configure what path should be by using
+.antMatchers("/**") matches all path  
+
+
+  
+    @Override
+    public void configure(final HttpSecurity http) throws Exception {
+
+        // high restricted url on top and so on
+
+        http.authorizeRequests()
+                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/user").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/").permitAll()
+                .and()
+                .formLogin();
+
+}
+
+
+*** How spring security authentication work
+
+The filters has the opportunity to do any processing and manupilating the request before it goes to servlet. It can even stop request so that it doesn't reaches server.
+
+There are by default five or 6 filter.
+These filter does on various things.
+One of these is authentication filter which intercepts all authentication requests,
+several authorization related as well and so on.
+       user credentials
+input  ->    
+                 Authentication
+    output  <-
+    It returns principal i.e information about the logged in user
+
+    When the spring security performs authentication its keep 
+    track of both the input and the output using the object 
+    of type authentication
+
+    Authentication is an internal spring security interface 
+    and the authentication object is meant to hold the credential
+    for the authentication, once the user is authenticated its hold 
+    the principal.
+
+    Before authentication auth contains user credential after authentication it contains principal.
+
+   Interface it has method authenticate()
+    Authentication provider responsible for doing actual authentication
+
+some one tries to authenticate in your spring application user has entered user id and password, spring security takes those credentials and puts into the authentication
+ object and it goes to the implementation of authentication provider and call the authenticate method, it takes authentication object, examine the credential if the credential are right, the method return an object 
+ which is of type authentication, it holds the information about currently logged user and it returns it back.
+An application can have multiple authentication provider and each of one knowing how to authenticate with specific
+authentication mechanism, 
+
+A single application can have multiple authentication strategy
+As a result an application can has multiple authentication provider
+
+AuthenticationManager and ApplicationProvider both have similar interface 
+Both has authenticate method that takes authenticate object and return authenticate 
+object
+
+Provider Manager does this kind of deligation
+it coordinate with these authentication provider depending upon the authentication type.
+
+Given an attempted authentication it ask all the available
+authentication provider which type of authentication they support
+ldap or Oauth etc till it finds the right provider to authenticate
+Once it finds the provider that can do the job for that
+particular authentication it deligates the work to it.
+Each authentication provider needs to save what type of 
+authentication it supports so in addition to authenticate method 
+AP also have additional supports method this is the method 
+provider managers call to find the right authentication provider
+for each and every authentication attempts
+
+What does this authentication provider need in order 
+to do authentication. For AP to do authentication you need 
+to access identity store, look up user information based on the user id that sent
+to you and once you get the user information then you can
+verify the credential saved in the system and see if it same as
+
+Given an authentication attempt every providers need to retrieve 
+the user from the system somehow and then verify the credential to make sure 
+the account is not logged, the password is not expired, valid user
+
+Where you are doing ldap or OAuth or any type of authentication the only part that might change is how you retrieve the user from the database and where you retrive it.
+Spring security extracted the retrieved part out, retrieving of user information part into its own entity called UserDetailsService
+
+This service take an username and returns an object with the user details.
+
+UserDetails object that returned by UserDetailsService contains most of the details.
+Once UserDetails object is returned the authenticationprovider has everything its need 
+to authenticate. With most ap if the auth is successfull they use the same details users object to directly as a principal object that gets populated in authentication object
+
+// Important Spring Security OverView //
+
+The authentication filter intercepts the authentication request
+it creates the authentication object with the credential and passes
+it to the authentication manager. 
+The authentication manager then finds the right provider that 
+can handle the authentication using the supports method. Then the 
+authentication manager call the authenticate method on that authentication 
+provider and passes the authentication objects.
+The authentication provider looks up the corresponding user in the 
+system by using the userdetail service.
+The userdetail service returns the userdetail instance
+which the authentication provider then verify and then the authentication
+happens.
+If the authentication is successfull the authentication object 
+is returned back with the principal and the authorities filled in
+The principal often being just that instance of the userdetails 
+object. Then this authenticate object goes back all the way back to
+the authentication filter that started it all.
+
+The authentication filter gets the authentication object with the principal
+it takes that object and save it to the thread context.
+There is security context that is associated with the current thread.
+This autentication object has a result of a successfull authentication
+is actually put into the security context in the thread local
+object for use in authorization, for use in identifying the 
+current principal and more.
+
+Theres also an mechanism to allow for this context to 
+be associated with the session. This is the actualy the reason
+you authenticate only once.
+And you can access the application for that duration and that work is
+done by another filter.
+
+Theres one filter which manages the user session it takes in the 
+authenticated principal and associate it with the user session.
+An thats the reason why you dont have to authenticate with every request.
+For every subsequent request this filter responsible for 
+taking that context from the session and saving it to the 
+thread local again. So its available for framework.
+
+If the authentication is not succcessfull in that case the authentication provider
+throws an authentication exception. And that exception bubbles
+all the way up to the filter there either something that 
+catches it or the user see the exception thrown possibly as an error page.
+
+
+
+**** JAVA Brains security ****

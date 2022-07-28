@@ -1,0 +1,32 @@
+// per page 5 contact [n] n = no of contactt
+// current page - 0 [page]
+
+@Entity 
+public class Product {
+    
+    @Id
+    private long id;
+    private String name;
+    private double price; 
+
+}
+
+public interface ProductRepository extends PagingAndSortingRepository<Product, Integer> {
+
+  List<Product> findAllByPrice(double price, Pageable pageable);
+}
+
+Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
+
+Pageable secondPageWithFiveElements = PageRequest.of(1, 5);
+
+Page<Product> allProducts = productRepository.findAll(firstPageWithTwoElements);
+
+if(allProducts.hasContent()) {
+  return allProducts.getContent();
+} else {
+  return new ArrayList<Product>();
+}
+
+List<Product> allTenDollarProducts = 
+  productRepository.findAllByPrice(10, secondPageWithFiveElements);

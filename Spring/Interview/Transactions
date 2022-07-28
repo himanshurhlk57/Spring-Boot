@@ -12,3 +12,9 @@ Using @Transactional
  In a transaction, if a single process fails then all transactions should fail. We can implement this behavior using @Transactional annotation.
 
  @Transactional will make sure all our operations are successfully executed, if not, it will roll back all operations at the database as if nothing happened.
+
+
+ I dont want to keep un used data in our database in case all the function doesn't executed successfully. 
+ The passenger info is saved while the payment hasn't successed so in this case i dont want to store data of passenger
+
+ If everything successed then commit that data to database if anything goes wrong then rollback that data from the database
